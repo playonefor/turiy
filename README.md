@@ -1,6 +1,6 @@
 # turiy
 
-## go GO go~~~
+## go go go~~~
 
 --------------------
 ## Install
