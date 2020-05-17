@@ -1,5 +1,6 @@
 import request from '@/plugin/axios'
 
+// 登录
 var AccountLogin = function (data) {
   return request({
     url: '/api/auth/login/',
@@ -8,11 +9,12 @@ var AccountLogin = function (data) {
   })
 }
 
-var GetAllUser = function (data){
+// 用户列表
+var GetAllUser = function (data) {
   return request({
     url: '/api/v1/users/',
     method: 'get',
-    data
+    params: data
   })
 }
 

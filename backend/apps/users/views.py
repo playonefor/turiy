@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -32,9 +33,10 @@ class CustomObtainJSONWebToken(ObtainJSONWebToken):
                                                   *args,
                                                   **kwargs
                                                   )
-        # 获取token
+        # get token
         token = response.data.get('token', '')
 
+        # custom response
         if token:
             user = jwt_decode_handler(token)
             userobj = User.objects.get(pk=user.get('user_id'))
@@ -80,7 +82,17 @@ class CustomObtainJSONWebToken(ObtainJSONWebToken):
         )
 
 
+# 用户列表分页
+class UserPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    page_query_param = 'page'
+    max_page_size = 100
+
+
+
 # 用户视图
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    pagination_class = UserPagination
