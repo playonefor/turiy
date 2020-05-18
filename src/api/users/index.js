@@ -18,6 +18,32 @@ var GetAllUser = function (data) {
   })
 }
 
+// 创建用户
+var CreateUser = function (data) {
+  return request({
+    url: '/api/v1/users/',
+    method: 'post',
+    data
+  })
+}
+
+// 删除用户
+var DeleteUser = function (data) {
+  return request({
+    url: '/api/v1/users/' + data.id + '/',
+    method: 'delete'
+  })
+}
+
+// 更新用户
+var UpdateUser = function (data) {
+  return request({
+    url: '/api/v1/users/' + data.id + '/',
+    method: 'put',
+    data
+  })
+}
+
 /*
 var GetUser = function(data) {
   return request({
@@ -35,21 +61,6 @@ var GetAllUser = function(data) {
   })
 }
 
-var UserCreate = function(data) {
-  return request({
-    url: '/services/app/User/Create',
-    method: 'post',
-    data
-  })
-}
-
-var UserUpdate = function(data) {
-  return request({
-    url: '/services/app/User/Update',
-    method: 'put',
-    data
-  })
-}
 var UserDelete = function(data) {
   return request({
     url: '/services/app/User/Delete',
@@ -58,4 +69,4 @@ var UserDelete = function(data) {
   })
 }
 */
-export { AccountLogin, GetAllUser }
+export { AccountLogin, GetAllUser, CreateUser, DeleteUser, UpdateUser }

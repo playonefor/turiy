@@ -1,4 +1,4 @@
-import store from '@/store'
+// import store from '@/store'
 import axios from 'axios'
 import { Message } from 'element-ui'
 import util from '@/libs/util'
@@ -13,11 +13,11 @@ function errorCreat (msg) {
 // 记录和显示错误
 function errorLog (err) {
   // 添加到日志
-  store.dispatch('d2admin/log/add', {
-    type: 'error',
-    err,
-    info: '数据请求异常'
-  })
+  // store.dispatch('d2admin/log/add', {
+  // type: 'error',
+  // err,
+  // info: '数据请求异常'
+  // })
   // 打印到控制台
   if (process.env.NODE_ENV === 'development') {
     util.log.danger('>>>>>> Error >>>>>>')
@@ -89,9 +89,21 @@ service.interceptors.response.use(
   },
   error => {
     if (error && error.response) {
-      console.log(error.response)
       switch (error.response.status) {
-        case 400: error.message = `400: ${error.response.data.msg}`; break
+        case 400:
+          if (error.response.data.msg === undefined) {
+            let msg = ''
+            for (var key in error.response.data) {
+              msg += key + error.response.data[key][0] + '  '
+            }
+            // error.message = `400:${error.response.data}`
+            error.message = `400:${msg}`
+            console.log(error.message)
+          } else {
+            error.message = `400:${error.response.data.msg}`
+            console.log(error.message)
+          }
+          break
         case 401: error.message = `401: ${error.response.data.msg}`; break
         case 403: error.message = '403: 拒绝访问'; break
         case 404: error.message = `401: ${error.response.data.msg}`; break

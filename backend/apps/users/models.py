@@ -8,6 +8,12 @@ class UserProfile(AbstractUser):
 
     """用户信息"""
 
+    password = models.CharField(
+        "密码",
+        max_length=100,
+        null=True,
+        blank=True
+    )
     name = models.CharField(
         "姓名",
         max_length=20,

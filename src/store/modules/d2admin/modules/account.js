@@ -1,7 +1,7 @@
 import { Message, MessageBox } from 'element-ui'
 import util from '@/libs/util.js'
 import router from '@/router'
-import { AccountLogin, GetAllUser } from '@/api/users'
+import { AccountLogin, GetAllUser, CreateUser, DeleteUser, UpdateUser } from '@/api/users'
 
 export default {
   namespaced: true,
@@ -67,6 +67,15 @@ export default {
     },
     GetAllUser (vm, data) {
       return GetAllUser(data)
+    },
+    CreateUser (vm, data) {
+      return CreateUser(data)
+    },
+    DeleteUser (vm, data) {
+      return DeleteUser(data)
+    },
+    UpdateUser (vm, data) {
+      return UpdateUser(data)
     },
     /**
      * @description 用户登录后从持久化数据加载一系列的设置

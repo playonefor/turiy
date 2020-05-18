@@ -1,6 +1,6 @@
 <template>
   <d2-container>
-    <PageHeader slot="header" @submit="handleSubmit" ref="header"> </PageHeader>
+    <PageHeader slot="header" @submit="handleSubmit" @flush="refreshData" ref="header"> </PageHeader>
     <div>
       <d2-crud
         ref="d2Crud"
@@ -11,6 +11,7 @@
         :data="data"
         :options="options"
         :loading="loading"
+        :edit-rules="editRules"
         :pagination="pagination"
         :form-options="formOptions"
         @pagination-current-change="paginationCurrentChange"
@@ -172,6 +173,20 @@ export default {
         currentPage: 1,
         pageSize: 10,
         total: 0
+      },
+      editRules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '请输入姓名', trigger: 'blur' }
+        ],
+        mobile: [
+          { required: true, message: '请输入手机号', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入电子邮箱', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -180,7 +195,9 @@ export default {
   },
   methods: {
     ...mapActions('d2admin/account', [
-      'GetAllUser'
+      'GetAllUser',
+      'DeleteUser',
+      'UpdateUser'
     ]),
     paginationCurrentChange (currentPage) {
       this.pagination.currentPage = currentPage
@@ -188,16 +205,18 @@ export default {
     },
     fetchData (page, pagesize) {
       this.loading = true
+      // 获取子组件数据
+      const fetchdata = this.$refs.header.form
+      // fetchdata.is_active = (fetchdata.is_active === 'true')
+      fetchdata.page = page
+      fetchdata.page_size = pagesize
       this.GetAllUser(
-        {
-          page: page,
-          page_size: pagesize
-        }
+        fetchdata
       ).then(res => {
         const resdata = []
         // 密码默认值
         for (var i = 0, len = res.results.length; i < len; i++) {
-          res.results[i].password = '**********'
+          res.results[i].password = ''
           resdata.push(res.results[i])
         }
         this.data = resdata
@@ -216,26 +235,41 @@ export default {
       return ''
     },
     handleRowRemove ({ index, row }, done) {
-      this.$message({
-        message: '删除成功',
-        type: 'success'
+      this.DeleteUser(
+        { 'id': row.id }
+      ).then(res => {
+        this.$message(
+          {
+            message: '删除成功',
+            type: 'success'
+          })
       })
       done()
     },
     handleRowEdit ({ index, row }, done) {
       this.formOptions.saveLoading = true
-      setTimeout(() => {
-        this.$message({
-          message: '编辑成功',
-          type: 'success'
-        })
+      const rowstr = row.password.replace(/\s+/g, '')
+      console.log(row)
+      if (!rowstr) {
+        delete row.password
+      }
+      this.UpdateUser(row).then(res => {
+        setTimeout(() => {
+          this.$message({
+            message: '编辑成功',
+            type: 'success'
+          })
 
-        // done可以传入一个对象来修改提交的某个字段
-        done({
-          address: '我是通过done事件传入的数据！'
+          // done可以传入一个对象来修改提交的某个字段
+          done({
+            address: '我是通过done事件传入的数据！'
+          })
+          this.formOptions.saveLoading = false
+        }, 400).catch(err => {
+          this.loading = false
+          console.log('err', err)
         })
-        this.formOptions.saveLoading = false
-      }, 400)
+      })
     },
     handleDialogCancel (done) {
       done()
@@ -247,13 +281,23 @@ export default {
       })
         .then(res => {
           this.loading = false
-          this.data = res.results
+          const resdata = []
+          // 密码默认值
+          for (var i = 0, len = res.results.length; i < len; i++) {
+            res.results[i].password = ''
+            resdata.push(res.results[i])
+          }
+          this.data = resdata
           this.pagination.total = res.count
         })
         .catch(err => {
           this.loading = false
           console.log('err', err)
         })
+    },
+    refreshData () {
+      this.loading = true
+      this.fetchData(this.pagination.currentPage, this.pagination.pageSize)
     }
   }
 }

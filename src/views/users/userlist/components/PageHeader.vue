@@ -1,11 +1,14 @@
 <template>
+  <el-row :gutter="20">
   <el-form
     :inline="true"
     :model="form"
     ref="form"
     size="mini"
-    style="margin-bottom: -10px;margin-top:10px;">
+    style="margin-bottom: -10px;margin-top:10px;"
+    >
 
+    <el-col :span="20">
     <el-form-item label="用户名" prop="username">
       <el-input
         v-model="form.username"
@@ -13,13 +16,14 @@
         style="width: 100px;"/>
     </el-form-item>
 
-    <el-form-item label="状态" prop="type">
+    <el-form-item label="状态" prop="is_active">
       <el-select
-        v-model="form.type"
+        v-model="form.is_active"
         placeholder="状态选择"
         style="width: 100px;">
-        <el-option label="启用" value="true"/>
-        <el-option label="禁用" value="false"/>
+        <el-option label="状态选择" value=""/>
+        <el-option label="启用" value="1"/>
+        <el-option label="禁用" value="0"/>
       </el-select>
     </el-form-item>
 
@@ -53,16 +57,35 @@
         重置
       </el-button>
     </el-form-item>
-
+    </el-col>
   </el-form>
+
+  <el-col :span="4">
+    <el-button
+      type="success"
+      @click="refreshData"
+      style="float: right;"
+      size="mini"
+      >
+      <d2-icon name="refresh"/>
+        刷新
+    </el-button>
+    <AddDialog style="float: right;"/>
+  </el-col>
+</el-row>
 </template>
 
 <script>
+import AddDialog from './AddDialog'
+
 export default {
+  components: {
+    AddDialog
+  },
   data () {
     return {
       form: {
-        type: 'true',
+        is_active: '',
         username: '',
         mobile: '',
         email: ''
@@ -71,6 +94,9 @@ export default {
   },
   methods: {
     handleFormSubmit () {
+      this.$emit('submit', this.form)
+      // 前端验证
+      /*
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.$emit('submit', this.form)
@@ -82,9 +108,18 @@ export default {
           return false
         }
       })
+      */
     },
     handleFormReset () {
       this.$refs.form.resetFields()
+    },
+    refreshData () {
+      this.$emit('flush', this.form)
+    },
+    handleAddDialog () {
+      AddDialog.dialogFormVisible = false
+      console.log(AddDialog)
+      AddDialog.dialogFormVisible = true
     }
   }
 }
