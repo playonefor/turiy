@@ -34,7 +34,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
-#重载系统的用户，让UserProfile生效
+# 重载系统的用户，让UserProfile生效
 AUTH_USER_MODEL = 'users.UserProfile'
 
 
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
     'users.apps.UsersConfig',
     'rental.apps.RentalConfig',
     'corsheaders'
@@ -141,6 +142,7 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'users.UserProfile'
 
 REST_FRAMEWORK= {
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     'DEFAULT_PERMISSION_CLASSES':(
         'rest_framework.permissions.IsAuthenticated',
     ),

@@ -1,6 +1,6 @@
 <template>
   <d2-container>
-    <template slot="header">用户管理</template>
+    <PageHeader slot="header" @submit="handleSubmit" ref="header"> </PageHeader>
     <div>
       <d2-crud
         ref="d2Crud"
@@ -18,7 +18,6 @@
         @row-edit="handleRowEdit"
         @dialog-cancel="handleDialogCancel" />
     </div>
-    <template slot="footer">用户管理</template>
   </d2-container>
 </template>
 
@@ -26,11 +25,13 @@
 import { mapActions } from 'vuex'
 import active from './components/active'
 import staff from './components/staff'
+import PageHeader from './components/PageHeader'
 import dayjs from 'dayjs'
 export default {
   components: {
     active,
-    staff
+    staff,
+    PageHeader
   },
   data () {
     return {
@@ -238,6 +239,21 @@ export default {
     },
     handleDialogCancel (done) {
       done()
+    },
+    handleSubmit (form) {
+      this.loading = true
+      this.GetAllUser({
+        ...form
+      })
+        .then(res => {
+          this.loading = false
+          this.data = res.results
+          this.pagination.total = res.count
+        })
+        .catch(err => {
+          this.loading = false
+          console.log('err', err)
+        })
     }
   }
 }

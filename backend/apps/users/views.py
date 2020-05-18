@@ -3,6 +3,9 @@ from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.views import ObtainJSONWebToken
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import filters
+from .filters import UsersFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
@@ -96,3 +99,5 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = UserPagination
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = UsersFilter
