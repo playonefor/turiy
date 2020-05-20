@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'django_filters',
     'users.apps.UsersConfig',
     'rental.apps.RentalConfig',
+    'application.apps.ApplicationConfig',
+    'perm.apps.PermConfig',
     'corsheaders'
 ]
 
@@ -139,14 +141,13 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = 'users.UserProfile'
 
-REST_FRAMEWORK= {
+REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
-    'DEFAULT_PERMISSION_CLASSES':(
+    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
-    'DEFAULT_AUTHENTICATION_CLASSES':(
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
@@ -172,4 +173,4 @@ CORS_ORIGIN_WHITELIST = (
 )
 CORS_ALLOW_CREDENTIALS = True
 
-APPEND_SLASH=False
+APPEND_SLASH = False

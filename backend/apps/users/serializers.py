@@ -7,13 +7,8 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = User
-        fields = ('id', 'username', 'name', 'mobile', 'wechat', 'email', 'is_active', 'is_staff', 'last_login', 'password')
+        fields = (
+            'id', 'username', 'name', 'mobile', 'wechat', 'email', 'is_active', 'is_staff', 'last_login', 'password'
+        )
         extra_kwargs = {'password': {'write_only': True}}
         # fields = "__all__"
-
-
-
-# Create your views here.
-
-
-

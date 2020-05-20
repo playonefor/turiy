@@ -24,7 +24,7 @@ export const menuHeader = supplementPath([
       // { path: '/page1', title: '页面 1' },
       // { path: '/page2', title: '页面 2' },
       // { path: '/page3', title: '页面 3' },
-      { path: '/userlist', title: '用户列表', icon: 'users' },
+      { path: '/userlist', title: '用户列表', icon: 'user' },
       { path: '/usergroup', title: '用户组', icon: 'group' }
     ]
   }

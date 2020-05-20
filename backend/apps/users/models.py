@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 
 # Create your models here.
 
@@ -7,7 +7,6 @@ from django.contrib.auth.models import AbstractUser
 class UserProfile(AbstractUser):
 
     """用户信息"""
-
     password = models.CharField(
         "密码",
         max_length=100,
@@ -46,3 +45,18 @@ class UserProfile(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class tManager(models.Manager):
+    pass
+
+
+class tGroup(Group):
+    notes = models.TextField(blank=True)
+
+    objects = models.Manager()
+
+    class Meta:
+        verbose_name = "用户组"
+        verbose_name_plural = verbose_name
+        ordering = ('name',)

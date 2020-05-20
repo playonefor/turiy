@@ -185,7 +185,8 @@ export default {
           { required: true, message: '请输入手机号', trigger: 'blur' }
         ],
         email: [
-          { required: true, message: '请输入电子邮箱', trigger: 'blur' }
+          { required: true, message: '请输入电子邮箱', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur'] }
         ]
       }
     }
@@ -251,7 +252,7 @@ export default {
       const rowstr = row.password.replace(/\s+/g, '')
       console.log(row)
       if (!rowstr) {
-        delete row.password
+        row.password = ''
       }
       this.UpdateUser(row).then(res => {
         setTimeout(() => {
@@ -265,10 +266,10 @@ export default {
             address: '我是通过done事件传入的数据！'
           })
           this.formOptions.saveLoading = false
-        }, 400).catch(err => {
-          this.loading = false
-          console.log('err', err)
-        })
+        }, 400)
+      }).catch(err => {
+        this.loading = false
+        console.log('err', err)
       })
     },
     handleDialogCancel (done) {
