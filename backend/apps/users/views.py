@@ -3,7 +3,7 @@ from rest_framework_jwt.views import ObtainJSONWebToken
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import filters
-from .filters import UsersFilter
+from .filters import UsersFilter, tGroupFilter
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
@@ -115,8 +115,8 @@ class UserViewSet(viewsets.ModelViewSet):
 class tGroupViewSet(viewsets.ModelViewSet):
     queryset = tGroup.objects.all()
     pagination_class = tGroupPagination
-    # filter_backends = (DjangoFilterBackend,)
-    # filter_class = UsersFilter
+    filter_backends = (DjangoFilterBackend,)
+    filter_class = tGroupFilter
     serializer_class = tGroupDetailSerializer
 
     def get_serializer_class(self):

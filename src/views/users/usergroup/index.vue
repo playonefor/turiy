@@ -1,7 +1,7 @@
 <template>
   <d2-container>
+  <PageHeader slot="header" @submit="handleSubmit" @flush="refreshData" ref="header"> </PageHeader>
   <div>
-
     <d2-crud
       ref="d2Crud"
       :columns="columns"
@@ -17,8 +17,12 @@
 
 <script>
 import { mapActions } from 'vuex'
+import PageHeader from './components/PageHeader'
 import dayjs from 'dayjs'
 export default {
+  components: {
+    PageHeader
+  },
   data () {
     return {
       columns: [
@@ -80,10 +84,15 @@ export default {
     },
     fetchData (page, pagesize) {
       this.loading = true
-      this.GetAllGroup({
-        page: page,
-        page_size: pagesize
-      }).then(res => {
+      // 获取子组件数据
+      const fetchdata = this.$refs.header.form
+
+      fetchdata.page = page
+      fetchdata.page_size = pagesize
+
+      this.GetAllGroup(
+        fetchdata
+      ).then(res => {
         this.data = res.results
         this.pagination.total = res.count
         this.loading = false
@@ -99,10 +108,28 @@ export default {
         return dayjs(timestr).format('YYYY年M月D日 HH:mm:ss', timestr)
       }
       return ''
+    },
+    refreshData (form) {
+      this.fetchData(this.pagination.currentPage, this.pagination.pageSize)
+    },
+    handleSubmit (form) {
+      this.loading = true
+      this.GetAllGroup({
+        ...form
+      }).then(res => {
+        this.loading = false
+        this.data = res.results
+        this.pagination.total = res.count
+      }).catch(err => {
+        this.loading = false
+        console.log('err', err)
+      })
     }
   },
   mounted () {
-    this.fetchData()
+    this.loading = true
+    this.fetchData(this.pagination.currentPage, this.pagination.pageSize)
+    this.loading = false
   }
 }
 </script>
