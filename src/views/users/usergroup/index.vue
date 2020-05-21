@@ -1,10 +1,11 @@
 <template>
   <d2-container>
-    <template slot="header">用户管理</template>
-    <div>
-      <d2-crud :columns="columns" :data="data" :options="options"/>
-    </div>
-    <template slot="footer">用户管理</template>
+  <div>
+    <d2-crud
+      :columns="columns"
+      :data="data"
+      :options="options"/>
+  </div>
   </d2-container>
 </template>
 
@@ -14,10 +15,9 @@ export default {
     return {
       columns: [
         {
-          title: '日期',
+          title: '用户组名称',
           key: 'date',
-          width: '180',
-          sortable: true
+          width: '180'
         },
         {
           title: '姓名',
@@ -26,8 +26,7 @@ export default {
         },
         {
           title: '地址',
-          key: 'address',
-          fixed: 'right'
+          key: 'address'
         }
       ],
       data: [

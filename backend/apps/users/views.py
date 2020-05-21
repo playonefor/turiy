@@ -1,14 +1,15 @@
-from users.serializers import UserSerializer
 from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.views import ObtainJSONWebToken
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import filters
 from .filters import UsersFilter
-from django_filters.rest_framework import DjangoFilterBackend
-from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
+from django_filters.rest_framework import DjangoFilterBackend
+from django.contrib.auth import get_user_model
+from users.models import tGroup
+from users.serializers import UserSerializer, tGroupListSerializer, tGroupDetailSerializer, tGroupCreateSerializer
 
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -33,9 +34,9 @@ def jwt_response_payload_handler(token, user=None, request=None):
 class CustomObtainJSONWebToken(ObtainJSONWebToken):
     def post(self, request, *args, **kwargs):
         response = super(CustomObtainJSONWebToken, self).post(request,
-                                                  *args,
-                                                  **kwargs
-                                                  )
+                                                              *args,
+                                                              **kwargs
+                                                              )
         # get token
         token = response.data.get('token', '')
 
@@ -93,6 +94,13 @@ class UserPagination(PageNumberPagination):
     max_page_size = 100
 
 
+# 用户组列表分页
+class tGroupPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    page_query_param = 'page'
+    max_page_size = 100
+
 
 # 用户视图
 class UserViewSet(viewsets.ModelViewSet):
@@ -101,3 +109,19 @@ class UserViewSet(viewsets.ModelViewSet):
     pagination_class = UserPagination
     filter_backends = (DjangoFilterBackend,)
     filter_class = UsersFilter
+
+
+# 用户组视图
+class tGroupViewSet(viewsets.ModelViewSet):
+    queryset = tGroup.objects.all()
+    pagination_class = tGroupPagination
+    # filter_backends = (DjangoFilterBackend,)
+    # filter_class = UsersFilter
+    serializer_class = tGroupDetailSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return tGroupListSerializer
+        if self.action == 'create':
+            return tGroupCreateSerializer
+        return tGroupDetailSerializer

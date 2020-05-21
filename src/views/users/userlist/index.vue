@@ -237,7 +237,7 @@ export default {
     },
     handleRowRemove ({ index, row }, done) {
       this.DeleteUser(
-        { 'id': row.id }
+        { id: row.id }
       ).then(res => {
         this.$message(
           {

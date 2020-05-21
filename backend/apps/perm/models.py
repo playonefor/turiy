@@ -13,18 +13,21 @@ class PerMisson(models.Model):
         max_length=100,
         unique=True
     )
-    app = models.ManyToManyField(
+    apps = models.ManyToManyField(
         Application,
+        related_name='granted_by_permissions',
         blank=True,
         verbose_name='应用'
     )
     users = models.ManyToManyField(
         User,
+        related_name='granted_by_permissions',
         blank=True,
         verbose_name='用户'
     )
-    group = models.ManyToManyField(
+    tgroups = models.ManyToManyField(
         tGroup,
+        related_name='granted_by_permissions',
         blank=True,
         verbose_name='用户组'
     )
@@ -32,8 +35,9 @@ class PerMisson(models.Model):
         auto_now_add=True,
         verbose_name='创建时间'
     )
-    content = models.CharField(
+    comment = models.CharField(
         '备注',
+        blank=True,
         max_length=1000
     )
 

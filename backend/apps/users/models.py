@@ -1,7 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group
 
-# Create your models here.
+'''
+# 自定义模型
+class tManager(models.Manager):
+    pass
+'''
+
+
+class tGroup(Group):
+    comment = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = "用户组"
+        verbose_name_plural = verbose_name
+        ordering = ('name',)
 
 
 class UserProfile(AbstractUser):
@@ -18,6 +31,11 @@ class UserProfile(AbstractUser):
         max_length=20,
         null=True,
         blank=True
+    )
+    tgroup = models.ManyToManyField(
+        tGroup,
+        related_name='users',
+        verbose_name="用户组"
     )
     mobile = models.CharField(
         "手机号",
@@ -45,18 +63,3 @@ class UserProfile(AbstractUser):
 
     def __str__(self):
         return self.username
-
-
-class tManager(models.Manager):
-    pass
-
-
-class tGroup(Group):
-    notes = models.TextField(blank=True)
-
-    objects = models.Manager()
-
-    class Meta:
-        verbose_name = "用户组"
-        verbose_name_plural = verbose_name
-        ordering = ('name',)
