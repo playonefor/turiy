@@ -9,6 +9,10 @@ class tManager(models.Manager):
 
 
 class tGroup(Group):
+    date_created = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="创建时间"
+    )
     comment = models.TextField(blank=True)
 
     class Meta:
@@ -35,6 +39,7 @@ class UserProfile(AbstractUser):
     tgroup = models.ManyToManyField(
         tGroup,
         related_name='users',
+        blank=True,
         verbose_name="用户组"
     )
     mobile = models.CharField(

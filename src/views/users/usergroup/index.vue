@@ -1,60 +1,108 @@
 <template>
   <d2-container>
   <div>
+
     <d2-crud
+      ref="d2Crud"
       :columns="columns"
+      :rowHandle="rowHandle"
       :data="data"
-      :options="options"/>
+      :options="options"
+      :pagination="pagination"
+      @pagination-current-change="paginationCurrentChange"
+      />
   </div>
   </d2-container>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import dayjs from 'dayjs'
 export default {
   data () {
     return {
       columns: [
         {
-          title: '用户组名称',
-          key: 'date',
-          width: '180'
-        },
-        {
-          title: '姓名',
+          title: '名称',
           key: 'name',
-          width: '180'
+          width: '200',
+          sortable: true
         },
         {
-          title: '地址',
-          key: 'address'
+          title: '创建时间',
+          key: 'date_created',
+          width: '200',
+          formatter: this.formatDate
+        },
+        {
+          title: '备注',
+          key: 'comment',
+          width: '220'
         }
       ],
+      rowHandle: {
+        columnHeader: '操作',
+        edit: {
+          icon: 'el-icon-edit',
+          text: '编辑',
+          size: 'mini'
+        },
+        remove: {
+          icon: 'el-icon-delete',
+          text: '删除',
+          size: 'mini',
+          type: 'danger',
+          confirm: true
+        },
+        width: '200',
+        fixed: 'right'
+      },
       data: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
       ],
       options: {
         border: true
+      },
+      loading: true,
+      pagination: {
+        currentPage: 1,
+        pageSize: 10,
+        total: 0
       }
     }
+  },
+  methods: {
+    ...mapActions('d2admin/group', [
+      'GetAllGroup'
+    ]),
+    paginationCurrentChange (currentPage) {
+      this.pagination.currentPage = currentPage
+      this.fetchData(this.pagination.currentPage, this.pagination.pageSize)
+    },
+    fetchData (page, pagesize) {
+      this.loading = true
+      this.GetAllGroup({
+        page: page,
+        page_size: pagesize
+      }).then(res => {
+        this.data = res.results
+        this.pagination.total = res.count
+        this.loading = false
+      }).catch(err => {
+        console.log('err', err)
+        this.loading = false
+      }
+      )
+    },
+    formatDate (row, column, cellValue, index) {
+      if (cellValue) {
+        var timestr = new Date(cellValue)
+        return dayjs(timestr).format('YYYY年M月D日 HH:mm:ss', timestr)
+      }
+      return ''
+    }
+  },
+  mounted () {
+    this.fetchData()
   }
 }
 </script>

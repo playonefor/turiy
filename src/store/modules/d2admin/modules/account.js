@@ -77,6 +77,9 @@ export default {
     UpdateUser (vm, data) {
       return UpdateUser(data)
     },
+    GetGroupUser (vm, data) {
+      return GetAllUser(data)
+    },
     /**
      * @description 用户登录后从持久化数据加载一系列的设置
      * @param {Object} context

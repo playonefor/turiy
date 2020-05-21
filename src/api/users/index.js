@@ -44,29 +44,4 @@ var UpdateUser = function (data) {
   })
 }
 
-/*
-var GetUser = function(data) {
-  return request({
-    url: '/services/app/User/Get',
-    method: 'get',
-    params: data
-  })
-}
-
-var GetAllUser = function(data) {
-  return request({
-    url: '/services/app/User/GetLists',
-    method: 'get',
-    params: data
-  })
-}
-
-var UserDelete = function(data) {
-  return request({
-    url: '/services/app/User/Delete',
-    method: 'delete',
-    params: data
-  })
-}
-*/
 export { AccountLogin, GetAllUser, CreateUser, DeleteUser, UpdateUser }

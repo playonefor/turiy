@@ -32,7 +32,7 @@ class tGroupListSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = tGroup
         fields = (
-            'id', 'name', 'comment'
+            'id', 'name', 'date_created', 'comment'
         )
 
 
@@ -44,7 +44,7 @@ class tGroupDetailSerializer(serializers.ModelSerializer):
     class Meta(object):
         model = tGroup
         fields = (
-            'id', 'name', 'comment', 'users'
+            'id', 'name', 'comment', 'date_created', 'users'
         )
 
 
