@@ -70,6 +70,16 @@ const frameIn = [
         component: _import('users/usergroup')
       },
       {
+        path: 'usergroup/groupdetail/:groupid',
+        name: 'groupdetail',
+        meta: {
+          title: '用户组详情',
+          auth: true
+        },
+        props: true,
+        component: _import('users/usergroup/components/PageDetail')
+      },
+      {
         path: 'permlist',
         name: 'permslist',
         meta: {

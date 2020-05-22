@@ -9,4 +9,12 @@ var GetAllGroup = function (data) {
   })
 }
 
-export { GetAllGroup }
+// 获取用户详情页
+var GetDetailGroup = function (data) {
+  return request({
+    url: '/api/v1/groups/' + data.id + '/',
+    method: 'get'
+  })
+}
+
+export { GetAllGroup, GetDetailGroup }

@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework import filters
 from .filters import UsersFilter, tGroupFilter
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
@@ -125,3 +126,9 @@ class tGroupViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             return tGroupCreateSerializer
         return tGroupDetailSerializer
+
+
+# 用户组剔除成员
+class tGroupDeleteUserApiView(APIView):
+    def post(self, request, format=None):
+        return Response({'msg': '删除成功'}, status=status.HTTP_200_OK)

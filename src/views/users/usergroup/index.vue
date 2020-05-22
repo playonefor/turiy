@@ -10,6 +10,7 @@
       :options="options"
       :pagination="pagination"
       @pagination-current-change="paginationCurrentChange"
+      @d2-data-change="handleDataChange"
       />
   </div>
   </d2-container>
@@ -18,10 +19,12 @@
 <script>
 import { mapActions } from 'vuex'
 import PageHeader from './components/PageHeader'
+import PageHrefDetail from './components/PageHrefDetail'
 import dayjs from 'dayjs'
 export default {
   components: {
-    PageHeader
+    PageHeader,
+    PageHrefDetail
   },
   data () {
     return {
@@ -30,7 +33,14 @@ export default {
           title: '名称',
           key: 'name',
           width: '200',
-          sortable: true
+          sortable: true,
+          component: {
+            name: PageHrefDetail,
+            props: {
+              myProps: ''
+            }
+          }
+
         },
         {
           title: '创建时间',
@@ -124,6 +134,9 @@ export default {
         this.loading = false
         console.log('err', err)
       })
+    },
+    handleDataChange (data) {
+      console.log(data)
     }
   },
   mounted () {

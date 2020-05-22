@@ -1,4 +1,4 @@
-import { GetAllGroup } from '@/api/groups'
+import { GetAllGroup, GetDetailGroup } from '@/api/groups'
 export default {
   namespaced: true,
   actions: {
@@ -6,6 +6,11 @@ export default {
      */
     GetAllGroup (vm, data) {
       return GetAllGroup(data)
+    },
+    /** 请求用户详情
+     */
+    GetDetailGroup (vm, data) {
+      return GetDetailGroup(data)
     }
   }
 }
