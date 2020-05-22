@@ -1,16 +1,19 @@
 from rest_framework_jwt.settings import api_settings
 from rest_framework_jwt.views import ObtainJSONWebToken
 from rest_framework.response import Response
+from django.http import Http404
 from rest_framework import status
-from rest_framework import filters
+# from rest_framework import filters
 from .filters import UsersFilter, tGroupFilter
 from rest_framework import viewsets
-from rest_framework.views import APIView
+# from rest_framework.views import APIView
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
 from users.models import tGroup
-from users.serializers import UserSerializer, tGroupListSerializer, tGroupDetailSerializer, tGroupCreateSerializer
+from users.serializers import UserSerializer, UserCreateSerializer, \
+    tGroupListSerializer, tGroupDetailSerializer, tGroupCreateSerializer
 
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -70,7 +73,6 @@ class CustomObtainJSONWebToken(ObtainJSONWebToken):
                 return Response(
                     {
                         'msg': '密码错误'
-
                     },
                     status.HTTP_401_UNAUTHORIZED
                 )
@@ -111,6 +113,11 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filter_class = UsersFilter
 
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return UserCreateSerializer
+        return UserSerializer
+
 
 # 用户组视图
 class tGroupViewSet(viewsets.ModelViewSet):
@@ -127,8 +134,32 @@ class tGroupViewSet(viewsets.ModelViewSet):
             return tGroupCreateSerializer
         return tGroupDetailSerializer
 
+    @action(detail=True, methods=['put'], name='Delete user from usergroup')
+    def delete_user_group(self, request, pk=None):
+        try:
+            group = tGroup.objects.get(pk=pk)
+        except tGroup.DoesNotExist:
+            raise Http404
+        try:
+            user = User.objects.get(pk=request.data.get('id'))
+        except User.DoesNotExist:
+            raise Http404
 
-# 用户组剔除成员
+        group.user.remove(user)
+
+        return Response({'status': 'delete success'}, status=status.HTTP_204_NO_CONTENT)
+
+
+'''
+用户组剔除成员
 class tGroupDeleteUserApiView(APIView):
-    def post(self, request, format=None):
+    def post(self, request, pk, format=None):
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            raise Http404
         return Response({'msg': '删除成功'}, status=status.HTTP_200_OK)
+
+    def get(self, request, pk, format=None):
+        return Response({'msg': 'test'}, status=status.HTTP_200_OK)
+'''

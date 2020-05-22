@@ -7,15 +7,33 @@ User = get_user_model()
 
 # 用户列表序列化
 class UserSerializer(serializers.ModelSerializer):
-    class Meta(object):
+    class Meta:
         model = User
         fields = (
             'id', 'username', 'name', 'mobile',
             'wechat', 'email', 'is_active', 'is_staff',
             'last_login', 'password', 'tgroup'
         )
+        read_only_fields = ('id',)
         extra_kwargs = {'password': {'write_only': True}}
         # fields = "__all__"
+
+
+class UserCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id', 'username', 'name', 'mobile',
+            'wechat', 'email', 'is_active', 'is_staff',
+            'password', 'tgroup'
+        )
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = super(UserCreateSerializer, self).create(validated_data=validated_data)
+        user.set_password(validated_data["password"])
+        user.save()
+        return user
 
 
 # 用户组下用户序列化
