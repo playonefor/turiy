@@ -187,18 +187,7 @@ class tGroupViewSet(viewsets.ModelViewSet):
         serializer = UserSimpleSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=['get'])
-    def get_group_permapp(self, request, pk=None):
-        try:
-            group = tGroup.objects.get(pk=pk)
-        except tGroup.DoesNotExist:
-            raise Http404
-
-        serializer = tGroupPermAppDetailSerializer(group)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    @action(detail=True, methods=['get'])
+    @action(detail=True, methods=['get'], name="get group permisson apps")
     def get_group_permapp(self, request, pk=None):
         try:
             group = tGroup.objects.get(pk=pk)

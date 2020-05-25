@@ -1,4 +1,4 @@
-import { GetAllGroup, GetDetailGroup, DeleteUserGroup, GetGroupOutSideUser, AddUsertoGroup } from '@/api/groups'
+import { GetAllGroup, GetDetailGroup, DeleteUserGroup, GetGroupOutSideUser, AddUsertoGroup, GetUserPermApps } from '@/api/groups'
 export default {
   namespaced: true,
   actions: {
@@ -26,6 +26,11 @@ export default {
      */
     AddUsertoGroup (vm, data) {
       return AddUsertoGroup(data)
+    },
+    /* 获取用户组权限应用列表
+     */
+    GetUserPermApps (vm, data) {
+      return GetUserPermApps(data)
     }
   }
 }

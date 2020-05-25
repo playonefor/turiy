@@ -43,4 +43,12 @@ var AddUsertoGroup = function (data) {
   })
 }
 
-export { GetAllGroup, GetDetailGroup, DeleteUserGroup, GetGroupOutSideUser, AddUsertoGroup }
+// 获取用户组里权限应用列表
+var GetUserPermApps = function (data) {
+  return request({
+    url: '/api/v1/groups/' + data.id + '/get_group_permapp/',
+    method: 'get'
+  })
+}
+
+export { GetAllGroup, GetDetailGroup, DeleteUserGroup, GetGroupOutSideUser, AddUsertoGroup, GetUserPermApps }

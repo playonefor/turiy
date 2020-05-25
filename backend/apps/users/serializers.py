@@ -9,12 +9,12 @@ User = get_user_model()
 
 # 应用序列化
 class AppSimpleSerilizer(serializers.ModelSerializer):
-    env = serializers.CharField(source='get_env_display')
+    envcode = serializers.CharField(source='get_env_display')
 
     class Meta(object):
         model = Application
         fields = (
-            'id', 'name', 'env'
+            'id', 'name', 'env', 'envcode'
         )
 
 

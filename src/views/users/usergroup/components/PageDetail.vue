@@ -76,7 +76,10 @@
             <d2-crud
             :columns="appcolumns"
             :data="appdata"
+            :pagination="apppagination"
+            @pagination-current-change="apppaginationCurrentChange"
             :options="options"/>
+            <el-input v-model="input" slot="header" placeholder="应用名称" style="margin-bottom: 5px; width:200px;" @input="appchangeValue" prefix-icon="el-icon-search" size="small" clearable></el-input>
           </el-card>
           </el-col>
         </el-row>
@@ -117,36 +120,46 @@ export default {
       ],
       appcolumns: [
         {
-          title: '应用名称',
-          key: 'applicaion',
+          title: '权限名称',
+          key: 'permname',
           width: '180'
         },
         {
-          title: '备注',
-          key: 'comment',
+          title: '应用名称',
+          key: 'appname',
+          width: '180'
+        },
+        {
+          title: '环境',
+          key: 'envcode',
           width: '180'
         }
       ],
       treedata: [
         {
           label: '所有环境',
-          icon: 'el-icon-copy-document'
+          icon: 'el-icon-copy-document',
+          id: '5'
         },
         {
           label: '开发环境',
-          icon: 'el-icon-copy-document'
+          icon: 'el-icon-copy-document',
+          id: '0'
         },
         {
           label: '测试环境',
-          icon: 'el-icon-copy-document'
+          icon: 'el-icon-copy-document',
+          id: '1'
         },
         {
           label: 'Beta环境',
-          icon: 'el-icon-copy-document'
+          icon: 'el-icon-copy-document',
+          id: '2'
         },
         {
           label: '生产环境',
-          icon: 'el-icon-copy-document'
+          icon: 'el-icon-copy-document',
+          id: '3'
         }],
       defaultProps: {
         children: 'children',
@@ -155,8 +168,8 @@ export default {
       userdata: [
       ],
       appdata: [],
-      alluserdata: [
-      ],
+      alluserdata: [],
+      allappdata: [],
       options: {
         border: true
       },
@@ -181,7 +194,13 @@ export default {
         currentPage: 1,
         pageSize: 10,
         total: 0
-      }
+      },
+      apppagination: {
+        currentPage: 1,
+        pageSize: 10,
+        total: 0
+      },
+      sectionappdata: []
     }
   },
   methods: {
@@ -189,7 +208,8 @@ export default {
       'GetDetailGroup',
       'DeleteUserGroup',
       'GetGroupOutSideUser',
-      'AddUsertoGroup'
+      'AddUsertoGroup',
+      'GetUserPermApps'
     ]),
     fetchData () {
       this.GetDetailGroup(
@@ -215,6 +235,16 @@ export default {
       this.userdata = users
       this.pagination.total = this.userdata.length
     },
+    appchangeValue (val) {
+      const apps = []
+      for (var i = 0, len = this.sectionappdata.length; i < len; i++) {
+        if (this.sectionappdata[i].appname.indexOf(val) !== -1) {
+          apps.push(this.sectionappdata[i])
+        }
+      }
+      this.appdata = apps
+      this.apppagination.total = this.appdata.length
+    },
     handleClick (tab, event) {
       console.log(tab, event)
     },
@@ -227,9 +257,21 @@ export default {
         end
       )
     },
+    appsetCurrentPageData () {
+      const begin = (this.apppagination.currentPage - 1) * this.apppagination.pageSize
+      const end = this.apppagination.currentPage * this.apppagination.pageSize
+      this.appdata = this.sectionappdata.slice(
+        begin,
+        end
+      )
+    },
     paginationCurrentChange (currentPage) {
       this.pagination.currentPage = currentPage
       this.setCurrentPageData()
+    },
+    apppaginationCurrentChange (currentPage) {
+      this.apppagination.currentPage = currentPage
+      this.appsetCurrentPageData()
     },
     handleRowRemove ({ index, row }, done) {
       this.DeleteUserGroup({
@@ -254,7 +296,6 @@ export default {
       })
     },
     addUsertoGroup () {
-      console.log(this.value1)
       this.AddUsertoGroup({
         id: this.gid,
         users: this.value1
@@ -268,7 +309,17 @@ export default {
       })
     },
     handleNodeClick (data) {
-      console.log(data)
+      if (data.id === '5') {
+        this.sectionappdata = this.allappdata
+        this.apppagination.total = this.sectionappdata.length
+        this.appdata = this.sectionappdata.slice(0, 10)
+        return
+      }
+      this.sectionappdata = this.allappdata.filter(app =>
+        app.env === data.id
+      )
+      this.apppagination.total = this.sectionappdata.length
+      this.appdata = this.sectionappdata.slice(0, 10)
     },
     renderContent (h, { node, data, store }) {
       return (
@@ -277,12 +328,33 @@ export default {
           <span> {node.label}</span>
         </span>
       )
+    },
+    loadappdata () {
+      this.GetUserPermApps(
+        { id: this.gid }
+      ).then(res => {
+        const datas = []
+        for (var i = 0, permslen = res.perms.length; i < permslen; i++) {
+          for (var j = 0, applen = res.perms[i].apps.length; j < applen; j++) {
+            const permappobj = {}
+            permappobj.permname = res.perms[i].name
+            permappobj.appname = res.perms[i].apps[j].name
+            permappobj.env = res.perms[i].apps[j].env
+            permappobj.envcode = res.perms[i].apps[j].envcode
+            datas.push(permappobj)
+          }
+        }
+        this.allappdata = datas
+      }).catch(res => {
+        console.log('err', res.details)
+      })
     }
   },
   mounted () {
     this.fetchData()
     this.setCurrentPageData()
     this.getGroupOutSideUser()
+    this.loadappdata()
   }
 }
 </script>
