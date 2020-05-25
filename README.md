@@ -1,6 +1,6 @@
 # 发布系统 && Jenkins Api
 
-[![python3.7](https://img.shields.io/badge/python-3.7-blue](https://www.python.org/)
+[![python3.7](https://img.shields.io/badge/python-3.7-blue])(https://www.python.org/)
 [![django3.0.6](https://img.shields.io/badge/django-3.0.6-yellow)](https://www.djangoproject.com/)
 [![djangorestframework3.11.0](https://img.shields.io/badge/django-3.0.6-yellow)](https://www.djangoproject.com/)
 [![djangorestframework3.11.0](https://img.shields.io/badge/djangorestframework-3.11.0-yellowgreen)](https://www.django-rest-framework.org/)
