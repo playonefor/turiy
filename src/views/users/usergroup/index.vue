@@ -40,7 +40,6 @@ export default {
               myProps: ''
             }
           }
-
         },
         {
           title: '创建时间',

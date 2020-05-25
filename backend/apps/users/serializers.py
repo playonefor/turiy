@@ -1,8 +1,41 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from users.models import tGroup
+from application.models import Application
+from perm.models import PerMisson
 
 User = get_user_model()
+
+
+# 应用序列化
+class AppSimpleSerilizer(serializers.ModelSerializer):
+    env = serializers.CharField(source='get_env_display')
+
+    class Meta(object):
+        model = Application
+        fields = (
+            'id', 'name', 'env'
+        )
+
+
+# 权限序列化
+class PermSimpleSerializer(serializers.ModelSerializer):
+    apps = AppSimpleSerilizer(many=True)
+
+    class Meta(object):
+        model = PerMisson
+        fields = (
+            'id', 'name', 'apps'
+        )
+
+
+# 用户基本字段序列化
+class UserSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id', 'username', 'name'
+        )
 
 
 # 用户列表序列化
@@ -80,3 +113,14 @@ class tGroupCreateSerializer(serializers.ModelSerializer):
         for user in users_data:
             instance.users.add(user)
         return instance
+
+
+# 用户组详情序列化
+class tGroupPermAppDetailSerializer(serializers.ModelSerializer):
+    perms = PermSimpleSerializer(source='granted_by_permissions', many=True)
+
+    class Meta(object):
+        model = tGroup
+        fields = (
+            'id', 'name', 'perms'
+        )

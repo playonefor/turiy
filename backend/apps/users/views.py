@@ -12,8 +12,8 @@ from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
 from users.models import tGroup
-from users.serializers import UserSerializer, UserCreateSerializer, \
-    tGroupListSerializer, tGroupDetailSerializer, tGroupCreateSerializer
+from users.serializers import UserSerializer, UserCreateSerializer, UserSimpleSerializer, \
+    tGroupListSerializer, tGroupDetailSerializer, tGroupCreateSerializer, tGroupPermAppDetailSerializer
 
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -134,7 +134,7 @@ class tGroupViewSet(viewsets.ModelViewSet):
             return tGroupCreateSerializer
         return tGroupDetailSerializer
 
-    @action(detail=True, methods=['put'], name='Delete user from usergroup')
+    @action(detail=True, methods=['put'], name='delete user from usergroup')
     def delete_user_group(self, request, pk=None):
         try:
             group = tGroup.objects.get(pk=pk)
@@ -145,9 +145,69 @@ class tGroupViewSet(viewsets.ModelViewSet):
         except User.DoesNotExist:
             raise Http404
 
-        group.user.remove(user)
+        group.users.remove(user)
 
-        return Response({'status': 'delete success'}, status=status.HTTP_204_NO_CONTENT)
+        return Response({'msg': 'delete success'}, status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=['get'], name='group outside user')
+    def group_outside_user(self, request, pk=None):
+        users = User.objects.exclude(tgroup__id=pk)
+        serializer = UserSimpleSerializer(users, many=True)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+    @action(detail=True, methods=['post'])
+    def add_userto_group(self, request, pk=None):
+        try:
+            group = tGroup.objects.get(pk=pk)
+        except tGroup.DoesNotExist:
+            raise Http404
+
+        if "users" not in request.data:
+            return Response({
+                'msg': 'params user not define'
+            })
+
+        users = []
+        for userid in request.data.get('users'):
+            try:
+                user = User.objects.get(pk=userid)
+            except User.DoesNotExist:
+                raise Http404
+
+            if user in group.users.all():
+                continue
+
+            group.users.add(user)
+            users.append(user)
+
+        serializer = UserSimpleSerializer(users, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['get'])
+    def get_group_permapp(self, request, pk=None):
+        try:
+            group = tGroup.objects.get(pk=pk)
+        except tGroup.DoesNotExist:
+            raise Http404
+
+        serializer = tGroupPermAppDetailSerializer(group)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['get'])
+    def get_group_permapp(self, request, pk=None):
+        try:
+            group = tGroup.objects.get(pk=pk)
+        except tGroup.DoesNotExist:
+            raise Http404
+
+        serializer = tGroupPermAppDetailSerializer(group)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 '''
