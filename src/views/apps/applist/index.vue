@@ -1,7 +1,11 @@
 <template>
   <d2-container>
-    <template slot="header">应用管理</template>
-    应用管理
+    <el-card >
+      dasdsad
+    </el-card>
+      dsadsad
+    <el-card >
+    </el-card>
   </d2-container>
 </template>
 

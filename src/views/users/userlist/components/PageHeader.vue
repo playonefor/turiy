@@ -60,7 +60,14 @@
     </el-col>
   </el-form>
 
-  <el-col :span="4">
+  
+  <el-col :span="2">
+  
+  <AddDialog style="float: right;" />
+
+  </el-col>
+
+  <el-col :span="2">
     <el-button
       type="success"
       @click="refreshData"
@@ -70,8 +77,8 @@
       <d2-icon name="refresh"/>
         刷新
     </el-button>
-    <AddDialog style="float: right;"/>
   </el-col>
+
 </el-row>
 </template>
 

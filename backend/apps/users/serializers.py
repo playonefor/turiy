@@ -51,6 +51,13 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
         # fields = "__all__"
 
+    def update(self, instance, validated_data):
+        instance = super(UserSerializer, self).update(instance, validated_data)
+        if validated_data.get("password", ""):
+            instance.set_password(validated_data.get("password"))
+        instance.save()
+        return instance
+
 
 class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -80,10 +87,13 @@ class tGroupUserSerializer(serializers.ModelSerializer):
 
 # 用户组列表序列化
 class tGroupListSerializer(serializers.ModelSerializer):
+
+    users = tGroupUserSerializer(many=True)
+
     class Meta(object):
         model = tGroup
         fields = (
-            'id', 'name', 'date_created', 'comment'
+            'id', 'name', 'date_created', 'comment', 'users'
         )
 
 
@@ -97,6 +107,12 @@ class tGroupDetailSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'comment', 'date_created', 'users'
         )
+
+    def update(self, instance, validated_data):
+        print(validated_data)
+        instance = super(tGroupDetailSerializer, self).update(instance, validated_data)
+        print(instance.users)
+        return instance
 
 
 # 用户组创建序列化
@@ -113,6 +129,15 @@ class tGroupCreateSerializer(serializers.ModelSerializer):
         for user in users_data:
             instance.users.add(user)
         return instance
+
+
+# 用户组更新序列化
+class tGroupUpdateSerializer(serializers.ModelSerializer):
+    class Meta(object):
+        model = tGroup
+        fields = (
+            'id', 'name', 'comment', 'users'
+        )
 
 
 # 用户组详情序列化

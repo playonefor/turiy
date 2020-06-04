@@ -35,10 +35,23 @@ class PermAppSerializer(serializers.ModelSerializer):
 
 # 权限列表序列化
 class PermListSerializer(serializers.ModelSerializer):
+    apps = PermAppSerializer(many=True)
+
     class Meta(object):
         model = PerMisson
         fields = (
-            'id', 'name', 'date_created', 'comment'
+            'id', 'name', 'date_created', 'comment', 'apps'
+        )
+
+
+# 权限简单列表序列化
+class PermListSimpleSerializer(serializers.ModelSerializer):
+    apps = PermAppSerializer(many=True)
+
+    class Meta(object):
+        model = PerMisson
+        fields = (
+            'id', 'name', 'apps'
         )
 
 
@@ -69,8 +82,6 @@ class PermCreateSerializer(serializers.ModelSerializer):
         users = validated_data.pop('users')
         tgroups = validated_data.pop('tgroups')
         apps = validated_data.pop('apps')
-
-        print(tgroups)
 
         instance = PerMisson.objects.create(**validated_data)
 

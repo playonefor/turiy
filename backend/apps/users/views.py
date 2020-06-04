@@ -13,7 +13,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.contrib.auth import get_user_model
 from users.models import tGroup
 from users.serializers import UserSerializer, UserCreateSerializer, UserSimpleSerializer, \
-    tGroupListSerializer, tGroupDetailSerializer, tGroupCreateSerializer, tGroupPermAppDetailSerializer
+    tGroupListSerializer, tGroupDetailSerializer, tGroupCreateSerializer, tGroupPermAppDetailSerializer, \
+    tGroupUpdateSerializer
 
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -132,6 +133,8 @@ class tGroupViewSet(viewsets.ModelViewSet):
             return tGroupListSerializer
         if self.action == 'create':
             return tGroupCreateSerializer
+        if self.action == 'update':
+            return tGroupUpdateSerializer
         return tGroupDetailSerializer
 
     @action(detail=True, methods=['put'], name='delete user from usergroup')

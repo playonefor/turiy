@@ -35,7 +35,19 @@
     </el-col>
   </el-form>
 
-  <el-col :span="4">
+  <el-col :span="2">
+    <el-button
+      type="primary"
+      @click="handlerPushuri"
+      size="mini"
+      style="float: right;"
+      >
+      <i class="el-icon-plus" aria-hidden="true"></i>
+        新增
+    </el-button>
+  </el-col>
+
+  <el-col :span="2">
     <el-button
       type="success"
       @click="refreshData"
@@ -82,6 +94,13 @@ export default {
     },
     refreshData () {
       this.$emit('flush', this.form)
+    },
+    handlerPushuri () {
+      this.$router.push(
+        {
+          name: 'creategroup'
+        }
+      )
     }
   }
 }

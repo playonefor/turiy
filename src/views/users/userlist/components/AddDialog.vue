@@ -1,6 +1,6 @@
 <template>
   <div :style="style.addDialog">
-    <el-button icon="el-icon-plus" type="primary" size="mini" @click="dialogFormVisible = true">新增</el-button>
+    <el-button icon="el-icon-plus" type="primary" size="mini" @click="dialogFormVisible = true" style="float: right;">新增</el-button>
     <el-dialog title="新增用户" :visible.sync="dialogFormVisible">
       <el-form :model="userForm" :rules="rules" ref="ruleForm"  label-position="left">
         <el-form-item label="用户名" :label-width="formLabelWidth" prop="username">
@@ -91,7 +91,6 @@ export default {
           })
           return false
         }
-
         this.CreateUser({
           ...this.userForm
         }).then(async res => {

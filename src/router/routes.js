@@ -80,6 +80,15 @@ const frameIn = [
         component: _import('users/usergroup/components/PageDetail')
       },
       {
+        path: 'usergroup/creategroup',
+        name: 'creategroup',
+        meta: {
+          title: '新增用户组',
+          auth: true
+        },
+        component: _import('users/usergroup/components/PageCreate')
+      },
+      {
         path: 'permlist',
         name: 'permslist',
         meta: {

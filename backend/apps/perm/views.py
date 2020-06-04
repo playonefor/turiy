@@ -1,9 +1,13 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
+from rest_framework import status
 from perm.models import PerMisson
 from perm.serializers import PermListSerializer, \
     PermDetailSerializer, \
-    PermCreateSerializer
+    PermCreateSerializer, \
+    PermListSimpleSerializer
 
 
 # 权限分页
@@ -28,3 +32,9 @@ class PermissonViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             return PermCreateSerializer
         return PermDetailSerializer
+
+    @action(detail=False, methods=['get'], name="get all permisson")
+    def getall(self, request, pk=None):
+        permsqs = PerMisson.objects.all()
+        serializer = PermListSimpleSerializer(permsqs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

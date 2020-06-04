@@ -1,10 +1,6 @@
 <template>
   <div style="cursor: pointer">
-    <!-- <a @click="handleClick" style="color:#1E90FF;">{{ text }}</a> -->
     <el-link @click="handleClick" type="primary">{{ text }}</el-link>
-    <!--
-    <el-tag :type="type" @click.native="handleClick">{{ text }}</el-tag>
-    -->
   </div>
 </template>
 <script>
@@ -36,7 +32,6 @@ export default {
           name: 'groupdetail',
           params: { groupid }
         }
-
       )
     }
   }

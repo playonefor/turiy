@@ -51,4 +51,31 @@ var GetUserPermApps = function (data) {
   })
 }
 
-export { GetAllGroup, GetDetailGroup, DeleteUserGroup, GetGroupOutSideUser, AddUsertoGroup, GetUserPermApps }
+// 删除用户组
+var DeleteGroup = function (data) {
+  return request({
+    url: '/api/v1/groups/' + data.id + '/',
+    method: 'delete'
+  })
+}
+
+// 创建用户组
+var CreateGroup = function (data) {
+  return request({
+    url: '/api/v1/groups/',
+    method: 'post',
+    data: data
+  })
+}
+
+// 更新用户组
+var UpdateGroup = function (data) {
+  console.log(data)
+  return request({
+    url: '/api/v1/groups/' + data.id + '/',
+    method: 'put',
+    data: data
+  })
+}
+
+export { GetAllGroup, GetDetailGroup, DeleteUserGroup, GetGroupOutSideUser, AddUsertoGroup, GetUserPermApps, DeleteGroup, CreateGroup, UpdateGroup }

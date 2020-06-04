@@ -17,22 +17,25 @@
         @pagination-current-change="paginationCurrentChange"
         @row-remove="handleRowRemove"
         @row-edit="handleRowEdit"
-        @dialog-cancel="handleDialogCancel" />
+        @dialog-cancel="handleDialogCancel"
+        @d2-data-change="handleDataChange"
+        />
     </div>
   </d2-container>
 </template>
-
 <script>
 import { mapActions } from 'vuex'
 import active from './components/active'
 import staff from './components/staff'
+import passwd from './components/passwd'
 import PageHeader from './components/PageHeader'
 import dayjs from 'dayjs'
 export default {
   components: {
     active,
     staff,
-    PageHeader
+    PageHeader,
+    passwd
   },
   data () {
     return {
@@ -117,7 +120,7 @@ export default {
           title: '密码',
           value: '',
           component: {
-            name: 'el-input'
+            name: passwd
           }
         },
         name: {
@@ -250,9 +253,9 @@ export default {
     handleRowEdit ({ index, row }, done) {
       this.formOptions.saveLoading = true
       const rowstr = row.password.replace(/\s+/g, '')
-      console.log(row)
       if (!rowstr) {
-        row.password = ''
+        // row.password = ''
+        delete row.password
       }
       this.UpdateUser(row).then(res => {
         setTimeout(() => {
@@ -260,7 +263,6 @@ export default {
             message: '编辑成功',
             type: 'success'
           })
-
           // done可以传入一个对象来修改提交的某个字段
           done({
             address: '我是通过done事件传入的数据！'
@@ -299,6 +301,9 @@ export default {
     refreshData () {
       this.loading = true
       this.fetchData(this.pagination.currentPage, this.pagination.pageSize)
+    },
+    handleDataChange (data) {
+      console.log(data)
     }
   }
 }

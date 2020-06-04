@@ -304,8 +304,8 @@ export default {
           this.userdata.unshift(res[i])
         }
       }).catch(err => {
-        this.$notify('err', err.details)
-        console.log('err', err.details)
+        this.$notify('err', err.detail)
+        console.log('err', err.detail)
       })
     },
     handleNodeClick (data) {
