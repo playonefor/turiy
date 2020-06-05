@@ -36,11 +36,13 @@ class PermAppSerializer(serializers.ModelSerializer):
 # 权限列表序列化
 class PermListSerializer(serializers.ModelSerializer):
     apps = PermAppSerializer(many=True)
+    users = PermUserSerializer(many=True)
+    tgroups = PermtGroupSerializer(many=True)
 
     class Meta(object):
         model = PerMisson
         fields = (
-            'id', 'name', 'date_created', 'comment', 'apps'
+            'id', 'name', 'date_created', 'comment', 'apps', 'users', 'tgroups'
         )
 
 

@@ -6,8 +6,6 @@ from application.serializers import ApplicationDetailSerializer, \
     ApplicationListSerializer
 
 
-
-
 # 应用分页
 class ApplicationPagination(PageNumberPagination):
     page_size = 10

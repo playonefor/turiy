@@ -21,36 +21,6 @@ const frameIn = [
         },
         component: _import('system/index')
       },
-      /**
-      演示页面
-      {
-        path: 'page1',
-        name: 'page1',
-        meta: {
-          title: '页面 1',
-          auth: true
-        },
-        component: _import('demo/page1')
-      },
-      {
-        path: 'page2',
-        name: 'page2',
-        meta: {
-          title: '页面 2',
-          auth: true
-        },
-        component: _import('demo/page2')
-      },
-      {
-        path: 'page3',
-        name: 'page3',
-        meta: {
-          title: '页面 3',
-          auth: true
-        },
-        component: _import('demo/page3')
-      },
-      **/
       {
         path: 'userlist',
         name: 'userlist',
@@ -98,6 +68,25 @@ const frameIn = [
         component: _import('perms/permlist')
       },
       {
+        path: 'permlist/permcreate',
+        name: 'createperm',
+        meta: {
+          title: '新增权限',
+          auth: true
+        },
+        component: _import('perms/components/PageCreate')
+      },
+      {
+        path: 'perms/update/:id',
+        name: 'permedit',
+        meta: {
+          title: '权限编辑',
+          auth: true
+        },
+        props: true,
+        component: _import('perms/components/PageUpdate.vue')
+      },
+      {
         path: 'applist',
         name: 'applist',
         meta: {
@@ -107,6 +96,7 @@ const frameIn = [
         component: _import('apps/applist')
       },
       // 系统 前端日志
+      /**
       {
         path: 'log',
         name: 'log',
@@ -116,6 +106,7 @@ const frameIn = [
         },
         component: _import('system/log')
       },
+      */
       // 刷新页面 必须保留
       {
         path: 'refresh',
