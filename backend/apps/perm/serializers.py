@@ -97,3 +97,12 @@ class PermCreateSerializer(serializers.ModelSerializer):
             instance.tgroups.add(tgroup)
 
         return instance
+
+
+# 权限更新序列化
+class PermUpdateSerializer(serializers.ModelSerializer):
+    class Meta(object):
+        model = PerMisson
+        fields = (
+            'id', 'name', 'apps', 'users', 'tgroups', 'comment'
+        )

@@ -51,4 +51,52 @@ var CreatePerm = function (data) {
   })
 }
 
-export { GetAllPerm, GetPerms, GetUsers, GetApps, GettGgroups, CreatePerm }
+// 查看权限以外的用户
+var GetPermOutUser = function (data) {
+  return request({
+    url: '/api/v1/permisson/' + data.id + '/getusers_out/',
+    method: 'get'
+  })
+}
+
+// 查看权限以外的用户组
+var GetPermOutGroup = function (data) {
+  return request({
+    url: '/api/v1/permisson/' + data.id + '/getgroups_out/',
+    method: 'get'
+  })
+}
+
+// 查看权限以外的应用
+var GetPermOutApp = function (data) {
+  return request({
+    url: '/api/v1/permisson/' + data.id + '/getapps_out/',
+    method: 'get'
+  })
+}
+
+// 查看权限信息
+var GetPerm = function (data) {
+  return request({
+    url: '/api/v1/permisson/' + data.id + '/',
+    method: 'get'
+  })
+}
+
+// 更新权限
+var UpdatePerm = function (data) {
+  return request({
+    url: '/api/v1/permisson/' + data.id + '/',
+    method: 'put',
+    data: data
+  })
+}
+// 删除权限
+var DeletePerm = function (data) {
+  return request({
+    url: '/api/v1/permisson/' + data.id + '/',
+    method: 'delete'
+  })
+}
+
+export { GetAllPerm, GetPerms, GetUsers, GetApps, GettGgroups, CreatePerm, GetPermOutUser, GetPermOutApp, GetPermOutGroup, GetPerm, UpdatePerm, DeletePerm }

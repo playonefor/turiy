@@ -32,7 +32,7 @@
           filterable
           filter-placeholder="请输入用户组名称"
           :titles="['未属于', '属于']"
-          v-model="ruleForm.groups"
+          v-model="ruleForm.tgroups"
           :data="groupsdata">
         </el-transfer>
         </el-form-item>
@@ -59,7 +59,7 @@
         </el-col>
       </el-row>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">编辑</el-button>
         <!-- <el-button @click="resetForm('ruleForm')">重置</el-button> -->
       </el-form-item>
     </el-form>
@@ -115,19 +115,21 @@ export default {
       'GetUsers',
       'GetApps',
       'GettGgroups',
-      'CreatePerm'
+      'GetPerm',
+      'UpdatePerm'
     ]
     ),
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.CreatePerm(this.ruleForm).then(async res => {
+          this.ruleForm.id = this.permid
+          this.UpdatePerm(this.ruleForm).then(async res => {
             if (res) {
-              this.$message.success('添加成功')
+              this.$message.success('编辑成功')
             } else {
               this.$notify.error({
                 title: '错误',
-                message: '添加错误'
+                message: '编辑错误'
               })
               console.log('err: ', res.error)
             }
@@ -182,10 +184,20 @@ export default {
         })
         this.groupsdata = data
       })
+
+      // 获取权限信息
+      this.GetPerm({
+        id: this.permid
+      }).then(res => {
+        this.ruleForm.users = res.users.map(function (i) { return i.id })
+        this.ruleForm.apps = res.apps.map(function (i) { return i.id })
+        this.ruleForm.tgroups = res.tgroups.map(function (i) { return i.id })
+        this.ruleForm.name = res.name
+        this.ruleForm.comment = res.comment
+      })
     }
   },
   mounted () {
-    console.log(this.permid)
     this.getresrc()
   }
 }

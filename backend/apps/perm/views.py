@@ -15,7 +15,8 @@ from perm.serializers import PermListSerializer, \
     PermListSimpleSerializer, \
     PermUserSerializer, \
     PermAppSerializer, \
-    PermtGroupSerializer
+    PermtGroupSerializer, \
+    PermUpdateSerializer
 
 User = get_user_model()
 
@@ -41,6 +42,8 @@ class PermissonViewSet(viewsets.ModelViewSet):
             return PermListSerializer
         if self.action == 'create':
             return PermCreateSerializer
+        if self.action == 'update':
+            return PermUpdateSerializer
         return PermDetailSerializer
 
     @action(detail=False, methods=['get'], name="get all permisson", url_path="getall")
@@ -66,3 +69,33 @@ class PermissonViewSet(viewsets.ModelViewSet):
         tgroups = tGroup.objects.all()
         serializer = PermtGroupSerializer(tgroups, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['get'], name='group outside user', url_path="getusers_out")
+    def get_outside_user(self, request, pk=None):
+        users = User.objects.exclude(granted_by_permissions__id=pk)
+        serializer = PermUserSerializer(users, many=True)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+    @action(detail=True, methods=['get'], name='group outside apps', url_path="getapps_out")
+    def get_outside_apps(self, request, pk=None):
+        apps = Application.objects.exclude(granted_by_permissions__id=pk)
+        serializer = PermAppSerializer(apps, many=True)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+    @action(detail=True, methods=['get'], name='group outside groups', url_path="getgroups_out")
+    def get_outside_tgroup(self, request, pk=None):
+        groups = tGroup.objects.exclude(granted_by_permissions__id=pk)
+        serializer = PermtGroupSerializer(groups, many=True)
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )

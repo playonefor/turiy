@@ -129,7 +129,8 @@ export default {
     // vuex
     ...mapActions('d2admin/perm', [
       'GetAllPerm',
-      'GetPerms'
+      'GetPerms',
+      'DeletePerm'
     ]),
     // node节点点击事件
     handleNodeClick (data) {
@@ -224,6 +225,27 @@ export default {
           name: 'permedit',
           params: { id: row.id }
         })
+    },
+    handleDelete (index, row, done) {
+      this.$confirm('确认删除？', '删除', {
+        type: 'warning'
+      })
+        .then(_ => {
+          this.DeletePerm({
+            id: row.id
+          }).then(res => {
+            this.treedata.splice(this.treedata[this.treedata.findIndex(obj => obj.id === row.id)], 1)
+            this.tableData.splice(this.tableData[this.tableData.findIndex(obj => obj.id === row.id)], 1)
+            this.$message.success('删除成功')
+          }).catch(err => {
+            this.$notify.error({
+              title: '错误',
+              message: '删除失败!'
+            })
+            console.log('err:', err)
+          })
+        })
+        .catch(_ => {})
     }
   },
   watch: {

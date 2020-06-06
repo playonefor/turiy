@@ -162,7 +162,7 @@ class tGroupViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK
         )
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=['post'], name="add user to group")
     def add_userto_group(self, request, pk=None):
         try:
             group = tGroup.objects.get(pk=pk)
